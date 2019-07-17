@@ -2,7 +2,10 @@ from __future__ import unicode_literals
 from django.db import models
 
 class UserManager(models.Manager):
-    def validator(self, post_data):
+    def log_validator(self, post_data):
+        errors = {}
+    
+    def reg_validator(self, post_data):
         errors = {}
 
 
@@ -17,10 +20,13 @@ class User(models.Model):
 
 class Message(models.Model):
     message_text = models.TextField()
+    user = models.ForeignKey(User, related_name='messages')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 class Comment(models.Model):
     comment_text = models.TextField()
+    user = models.ForeignKey(User, related_name='comments')
+    message = models.ForeignKey(Message, related_name='comments')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
