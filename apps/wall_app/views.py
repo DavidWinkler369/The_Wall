@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
-from .models import User, UserManager
+from .models import *
 import bcrypt
 
 def index(request):
@@ -18,8 +18,8 @@ def register(request):
         return redirect('/')
     else:
         user = User.objects.create(
-            firstName = request.POST['fname'],
-            lastName = request.POST['lname'],
+            first_name = request.POST['fname'],
+            last_name = request.POST['lname'],
             email_address = request.POST['email'],
             password = bcrypt.hashpw(request.POST['pword'].encode(), bcrypt.gensalt())
         )
@@ -36,13 +36,47 @@ def login(request):
             messages.error(request, value)
         return redirect('/')
     else:
-        user = User.objects.filter(email_address = request.POST['email'])
-        request.session['user'] = user[0].id
-        request.session['fname'] = user[0].first_name
+        user = User.objects.get(email_address = request.POST['email'])
+        request.session['user'] = user.id
+        request.session['fname'] = user.first_name
     return redirect('/wall')
 
 
 def wall(request):
     print('*'*100)
     print('in the wall...')
-    return render(request, 'wall_app/wall.html')
+    context = {
+        'fname' : request.session['fname'],
+        'messages' : Message.objects.all(),
+        'comments' : Comment.objects.all(),
+    }
+    return render(request, 'wall_app/wall.html', context)
+
+def post_message(request):
+    print('*'*100)
+    print('creating message...')
+    if request.method == 'POST':
+        new_message = Message.objects.create(
+            message_text = request.POST['msg'],
+            user = User.objects.get(id = request.session['user'])
+        )
+        new_message.save()
+    return redirect('/wall')
+
+def post_comment(request, msg_id):
+    print('*'*100)
+    print('posting comment...')
+    if request.method == 'POST':
+        new_comment = Comment.objects.create(
+            comment_text = request.POST['cmnt'],
+            user = User.objects.get(id = request.session['user']),
+            message = Message.objects.get(id = msg_id)
+        )
+        new_comment.save()
+    return redirect('/wall')
+
+def destroy(request):
+    print('*'*100)
+    print('Clearing session and returning to login...')
+    request.session.clear()
+    return redirect('/')

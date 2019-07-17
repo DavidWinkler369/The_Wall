@@ -21,8 +21,8 @@ class UserManager(models.Manager):
             errors["email"] = "Email is required!"
         if User.objects.filter(email_address = postData['email']).exists():
             errors['email'] = "Email already exists."
-        if User.objects.filter(password = postData['pword']).exists():
-            errors['pword'] = "Password already in use"
+        # if User.objects.filter(password = postData['pword']).exists():
+        #     errors['pword'] = "Password already in use"
         if postData['confirm'] != postData['pword']:
             errors['confirm'] = "Confirmation password does not match password!"
         return errors
@@ -30,10 +30,12 @@ class UserManager(models.Manager):
 
     def log_validation(self, postData):
         errors = {}
-        user = User.objects.filter(email_address = postData['email'])
-        if not user:
-            errors['email'] = f"{postData['email']} does not match our database!"
-        if not bcrypt.checkpw(postData['pword'].encode(), user[0].password.encode()):
+        try:
+            user = User.objects.get(email_address = postData['email'])
+        except:
+            errors['email'] = f"Email address {postData['email']} is not registered in our database!"
+            return errors
+        if not bcrypt.checkpw(postData['pword'].encode(), user.password.encode()):
             errors['pword'] = "Password does not match our database!"
         return errors
         
