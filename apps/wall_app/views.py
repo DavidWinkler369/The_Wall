@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
 from .models import User, UserManager
+import bcrypt
 
 def index(request):
     print('*'*100)
@@ -10,7 +11,7 @@ def index(request):
 def register(request):
     print('*'*100)
     print('Registering...')
-    errors = User.objects.registrationValidation(request.POST)
+    errors = User.objects.reg_validation(request.POST)
     if len(errors) > 0:
         for key, value in errors.items():
             messages.error(request, value)
@@ -29,7 +30,7 @@ def register(request):
 def login(request):
     print('*'*100)
     print('logging in...')
-    errors = User.objects.loginValidation(request.POST)
+    errors = User.objects.log_validation(request.POST)
     if len(errors) > 0:
         for key, value in errors.items():
             messages.error(request, value)

@@ -1,13 +1,43 @@
 from __future__ import unicode_literals
 from django.db import models
+import bcrypt
 
 class UserManager(models.Manager):
-    def log_validator(self, post_data):
+    def reg_validation(self, postData):
         errors = {}
-    
-    def reg_validator(self, post_data):
-        errors = {}
+        if len(postData['fname']) <= 0:
+            errors["fname"] = "Must enter a first name!"
+        elif len(postData['fname']) < 2:
+            errors["fname"] = "First name should be at least 2 characters!"
+        if len(postData['lname']) <= 0:
+            errors["lname"] = "Must enter a last name!"
+        elif len(postData['lname']) < 2:
+            errors["lname"] = "Last name should be at least 2 characters!"
+        if len(postData['pword']) <= 0:
+            errors["pword"] = "Password is required!"
+        if len(postData['pword']) < 8:
+            errors['pword'] = "Password must be at least 8 characters!"
+        if len(postData['email']) <= 0:
+            errors["email"] = "Email is required!"
+        if User.objects.filter(email_address = postData['email']).exists():
+            errors['email'] = "Email already exists."
+        if User.objects.filter(password = postData['pword']).exists():
+            errors['pword'] = "Password already in use"
+        if postData['confirm'] != postData['pword']:
+            errors['confirm'] = "Confirmation password does not match password!"
+        return errors
+        
 
+    def log_validation(self, postData):
+        errors = {}
+        user = User.objects.filter(email_address = postData['email'])
+        if not user:
+            errors['email'] = f"{postData['email']} does not match our database!"
+        if not bcrypt.checkpw(postData['pword'].encode(), user[0].password.encode()):
+            errors['pword'] = "Password does not match our database!"
+        return errors
+        
+    
 
 class User(models.Model):
     first_name = models.CharField(max_length = 255)

@@ -17,6 +17,7 @@
 
         <div class="post_message">
             <form action="{{Placeholder}}" method="POST">
+                    {% csrf_token %}
                 <input type="text" class="message_box" placeholder="Post a message...">
                 <input type="submit" value="Post It">
             </form>

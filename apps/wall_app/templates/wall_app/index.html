@@ -12,6 +12,7 @@
         <div class="reg">
             
             <form action="/register" method="POST">
+                {% csrf_token %}
                 New to The Wall? Register now!
 
                 First Name:
@@ -25,6 +26,9 @@
 
                 Password:
                 <input type="password" name="pword">
+                
+                Confirm Password:
+                <input type="password" name="confirm">
 
                 <input type="submit" name="register" value="Register">
             </form>
@@ -34,6 +38,7 @@
         <div class="log">
 
             <form action="/login" method="POST">
+                {% csrf_token %}
                 Email:
                 <input type="email" name="email">
 
@@ -44,6 +49,14 @@
             </form>
 
         </div>
+
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
     </div>
 </body>
