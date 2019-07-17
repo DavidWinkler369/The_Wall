@@ -7,6 +7,23 @@
     <title>The Wall</title>
 </head>
 <body>
-    The Wall!!!
+    <div class="container">
+
+        <div class="header">
+            <h1>CodingDojo Wall</h1>
+            <p> Welcome {{Placeholder}}</p>
+            <a href="/destroy">Log Off</a>
+        </div>
+
+        <div class="post_message">
+            <form action="{{Placeholder}}" method="POST">
+                <input type="text" class="message_box" placeholder="Post a message...">
+                <input type="submit" value="Post It">
+            </form>
+        </div>
+
+        {{###----Messages and comments here----###}}
+
+    </div>
 </body>
 </html>

@@ -7,6 +7,44 @@
     <title>The Wall Login</title>
 </head>
 <body>
-    Hello!!!
+    <div class="contatiner">
+
+        <div class="reg">
+            
+            <form action="/register" method="POST">
+                New to The Wall? Register now!
+
+                First Name:
+                <input type="text" name="fname">
+                
+                First Name:
+                <input type="text" name="lname">
+
+                Email:
+                <input type="email" name="email">
+
+                Password:
+                <input type="password" name="pword">
+
+                <input type="submit" name="register" value="Register">
+            </form>
+        
+        </div>
+
+        <div class="log">
+
+            <form action="/login" method="POST">
+                Email:
+                <input type="email" name="email">
+
+                Password:
+                <input type="password" name="pword"> 
+
+                <input type="submit" name="login" value="Log In">
+            </form>
+
+        </div>
+
+    </div>
 </body>
 </html>
