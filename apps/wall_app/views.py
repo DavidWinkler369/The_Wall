@@ -45,6 +45,8 @@ def login(request):
 def wall(request):
     print('*'*100)
     print('in the wall...')
+    if 'user' not in request.session: #Make sure user is kicked back to index if not in session
+        return redirect('/')
     context = {
         'fname' : request.session['fname'],
         'messages' : Message.objects.all(),
